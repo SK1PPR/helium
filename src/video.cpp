@@ -19,7 +19,36 @@ void displayFrameAsAscii(cv::Mat& frame) {
     }
 }
 
-void playVideoAsAscii(const std::string& videoPath) {
+void displayFrameAsAsciiColor(cv::Mat& frame) {
+    const Dimensions printDims = getPrintDimensions(Dimensions(frame.cols, frame.rows));
+    cv::resize(frame, frame, cv::Size(printDims.width, printDims.height));
+
+    std::cout << "\033[H\033[J"; // Clear screen
+
+    for (int y = 0; y < printDims.height; y++) {
+        for (int x = 0; x < printDims.width; x++) {
+            auto color = frame.at<cv::Vec3b>(y, x);  // BGR
+            const int b = color[0];
+            const int g = color[1];
+            const int r = color[2];
+
+            // Convert to 216-color cube (0-5 per channel)
+            const int r6 = r * 6 / 256;
+            const int g6 = g * 6 / 256;
+            const int b6 = b * 6 / 256;
+            const int ansiColor = 16 + 36 * r6 + 6 * g6 + b6;
+
+            // Grayscale brightness for picking character
+            const int brightness = (r + g + b) / 3;
+            const char c = getAscii(brightness);
+
+            std::cout << "\033[38;5;" << ansiColor << "m" << c;
+        }
+        std::cout << "\033[0m\n";  // Reset color
+    }
+}
+
+void playVideoAsAscii(const std::string& videoPath, const bool color) {
     cv::VideoCapture cap(videoPath);
     if (!cap.isOpened()) {
         std::cerr << "Failed to open video: " << videoPath << std::endl;
@@ -31,8 +60,12 @@ void playVideoAsAscii(const std::string& videoPath) {
 
     cv::Mat frame, grayFrame;
     while (cap.read(frame)) {
-        cv::cvtColor(frame, grayFrame, cv::COLOR_BGR2GRAY); // Convert to grayscale
-        displayFrameAsAscii(grayFrame); // Display frame as ASCII
+        if (color) {
+            displayFrameAsAsciiColor(frame);
+        } else {
+            cv::cvtColor(frame, grayFrame, cv::COLOR_BGR2GRAY); // Convert to grayscale
+            displayFrameAsAscii(grayFrame);
+        }
         usleep(frameDelay); // Control frame rate
     }
     cap.release();

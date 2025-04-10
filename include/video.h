@@ -7,6 +7,4 @@
 #include <opencv2/opencv.hpp>
 #include <utils.h>
 
-void displayFrameAsAscii(cv::Mat& frame);
-
-void playVideoAsAscii(const std::string& videoPath);
+void playVideoAsAscii(const std::string& videoPath, bool color);

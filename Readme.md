@@ -9,7 +9,21 @@ The project requires `opencv` and `opencv` devel to be present
 - `cmake -S . -B <build_dir>`
 -  `cmake --build <build_dir>`
 
+## Run
+
+### For images
+`<build_dir>/helium --img <path_to_img>`
+
+### For videos
+- For colored video: `<build_dr>/helium --vid <path_to_vid>`
+- For normal ascii video: `<build_dir>/helium --vid -b <path_to_vid>`
+
 ## To-do :
 
-- [ ] Add colors
+- [x] Add colors
 - [ ] Add multi-threading for faster processing
+
+
+## Future scope :
+
+- Add ability to convert the audio to 8-bit
