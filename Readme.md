@@ -16,7 +16,7 @@ The project requires `opencv` and `opencv` devel to be present
 
 ### For videos
 - For colored video: `<build_dr>/helium --vid <path_to_vid>`
-- For normal ascii video: `<build_dir>/helium --vid -b <path_to_vid>`
+- For normal ascii video: `<build_dir>/helium --vid <path_to_vid> [--color]`
 
 ## To-do :
 
